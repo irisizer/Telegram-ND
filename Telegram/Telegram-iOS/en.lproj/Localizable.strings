@@ -16598,3 +16598,25 @@ Error: %8$@";
 "TextProcessing.ActionGenerate" = "Generate";
 "TextProcessing.StyleList.Prompt" = "Prompt";
 "TextProcessing.PromptPlaceholder" = "Generate text, formulas, or tables...";
+
+
+// New Features (NameDrop)
+
+"Settings.NewFeatures" = "New Features";
+"Settings.NewFeatures.Beta" = "BETA";
+"NewFeatures.Title" = "New Features";
+"NewFeatures.NameDrop.Title" = "NameDrop";
+"NewFeatures.NameDrop.Text" = "Share your profile by bringing iPhones close together via AirDrop. Advertising works only while your own profile is open.";
+"NewFeatures.NameDrop.Header" = "PROFILE SHARING";
+"NewFeatures.NameDrop.Enabled" = "NameDrop";
+"NewFeatures.NameDrop.EnabledOn" = "On";
+"NewFeatures.NameDrop.EnabledOff" = "Off";
+"NewFeatures.Customization.Header" = "CUSTOMIZATION";
+"NewFeatures.Customization.BackgroundEmoji" = "Background Emoji";
+"NewFeatures.Customization.BackgroundEmojiPlaceholder" = "Tap to set emoji";
+"NewFeatures.Customization.WindowColor" = "Window Color";
+"NewFeatures.Customization.PremiumRequired" = "Premium required for customization";
+"NewFeatures.Customization.PremiumRequiredText" = "Subscribe to Telegram Premium to customize the NameDrop window with a background emoji and color. The customization is independent from your profile.";
+"NewFeatures.Receive.Ignore" = "Ignore";
+"NewFeatures.Receive.AddChat" = "Add Chat";
+"NewFeatures.Receive.Title" = "NameDrop";

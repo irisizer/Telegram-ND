@@ -271,6 +271,9 @@ extension PeerInfoScreenNode {
             self.interaction.editingOpenNameColorSetup()
         case .powerSaving:
             push(energySavingSettingsScreen(context: self.context))
+        case .newFeatures:
+            NameDropManager.shared.ensureReceiver(with: self.context)
+            push(newFeaturesSettingsScreen(context: self.context))
         case .businessSetup:
             guard let controller = self.controller, !controller.presentAccountFrozenInfoIfNeeded() else {
                 return

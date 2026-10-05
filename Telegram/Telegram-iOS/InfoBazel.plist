@@ -125,6 +125,12 @@
 	<string>We need this so that you can share photos and videos from your photo library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need this so that you can share photos and videos from your photo library.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>NameDrop uses the local network (AirDrop / Multipeer) to discover nearby iPhones and share your Telegram profile when your own profile is open.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_tg-namedrop._tcp</string>
+	</array>
 	<key>NSSiriUsageDescription</key>
 	<string>You can use Siri to send messages.</string>
 	<key>NSUserActivityTypes</key>

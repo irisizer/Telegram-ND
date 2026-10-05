@@ -183,6 +183,7 @@ enum PeerInfoSettingsSection {
     case emojiStatus
     case profileColor
     case powerSaving
+    case newFeatures
     case businessSetup
     case profile
     case premiumManagement
@@ -6945,6 +6946,7 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
         super.viewWillDisappear(animated)
         
         self.dismissAllTooltips()
+        self.stopNameDropAdvertising()
         
         if let emojiStatusSelectionController = self.controllerNode.emojiStatusSelectionController {
             self.controllerNode.emojiStatusSelectionController = nil
@@ -7137,6 +7139,52 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
         
         self.controllerNode.refreshHasPersonalChannelsIfNeeded()
         self.controllerNode.initialExpandPanes = false
+
+        self.updateNameDropAdvertisingIfNeeded()
+    }
+
+    private func updateNameDropAdvertisingIfNeeded() {
+        // NameDrop advertises only while the user's OWN profile is open.
+        // The receiver side (browsing) is armed whenever any account context
+        // is bound, so a second iPhone nearby shows the top banner.
+        NameDropManager.shared.ensureReceiver(with: self.context)
+        guard self.isMyProfile else {
+            return
+        }
+        guard NameDropSettingsStore.shared.get().enabled else {
+            NameDropManager.shared.setAdvertisingPayload(nil)
+            return
+        }
+        guard let peer = self.controllerNode.data?.peer else {
+            // Peer data may not be loaded yet; retry shortly.
+            Queue.mainQueue().after(0.5) { [weak self] in
+                self?.updateNameDropAdvertisingIfNeeded()
+            }
+            return
+        }
+        let fullName: String
+        let username: String?
+        if case let .user(user) = peer {
+            let first = user.firstName ?? ""
+            let last = user.lastName ?? ""
+            let combined = "\(first) \(last)".trimmingCharacters(in: .whitespacesAndNewlines)
+            fullName = combined.isEmpty ? peer.displayTitle(strings: self.presentationData.strings, displayOrder: self.presentationData.nameDisplayOrder) : combined
+            let raw = peer.addressName ?? ""
+            username = raw.isEmpty ? nil : raw
+        } else {
+            fullName = peer.displayTitle(strings: self.presentationData.strings, displayOrder: self.presentationData.nameDisplayOrder)
+            let raw = peer.addressName ?? ""
+            username = raw.isEmpty ? nil : raw
+        }
+        guard !fullName.isEmpty else { return }
+        let payload = NameDropManager.shared.makeOwnPayload(context: self.context, fullName: fullName, username: username)
+        NameDropManager.shared.setAdvertisingPayload(payload)
+    }
+
+    private func stopNameDropAdvertising() {
+        if self.isMyProfile {
+            NameDropManager.shared.setAdvertisingPayload(nil)
+        }
     }
     
     override public func containerLayoutUpdated(_ layout: ContainerViewLayout, transition: ContainedViewLayoutTransition) {
