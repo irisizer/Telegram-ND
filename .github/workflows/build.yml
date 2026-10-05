@@ -11,6 +11,7 @@ jobs:
     runs-on: macos-26
     permissions:
       contents: write
+      actions: write
 
     steps:
       - uses: actions/checkout@v4
@@ -94,3 +95,19 @@ jobs:
             --notes "An unsigned build of Telegram for iOS ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})" \
             "/Users/Shared/telegram-ios/build/artifacts/Telegram.ipa#Telegram.ipa" \
             "/Users/Shared/telegram-ios/build/artifacts/Telegram.DSYMs.zip#Telegram.DSYMs.zip"
+
+      - name: Upload IPA as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Telegram-ipa
+          path: /Users/Shared/telegram-ios/build/artifacts/Telegram.ipa
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload dSYMs as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Telegram-dSYMs
+          path: /Users/Shared/telegram-ios/build/artifacts/Telegram.DSYMs.zip
+          if-no-files-found: error
+          retention-days: 14
