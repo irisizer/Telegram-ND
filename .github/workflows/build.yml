@@ -65,19 +65,22 @@ jobs:
             --configuration=release_arm64 \
             --buildNumber="$BUILD_NUMBER"
 
-          # collect ipa
+          # collect ipa (resolve via find: exact bazel-out config dir varies by toolchain)
           OUTPUT_PATH="build/artifacts"
           rm -rf "$OUTPUT_PATH"
           mkdir -p "$OUTPUT_PATH"
-          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/Telegram/Telegram.ipa; do
-            cp "$f" $OUTPUT_PATH/
-          done
+          IPA_SRC="$(find -L bazel-out -maxdepth 5 -path '*/bin/Telegram/Telegram.ipa' | head -1)"
+          if [ -z "$IPA_SRC" ]; then
+            echo "Telegram.ipa not found under bazel-out"
+            find -L bazel-out -maxdepth 5 -name '*.ipa' | head
+            exit 1
+          fi
+          echo "Found IPA at $IPA_SRC"
+          cp "$IPA_SRC" "$OUTPUT_PATH/"
 
           # collect dsym
           mkdir -p build/DSYMs
-          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/Telegram/*.dSYM; do
-            cp -R "$f" build/DSYMs/
-          done
+          find -L bazel-out -maxdepth 5 -path '*/bin/Telegram/*.dSYM' -exec cp -R {} build/DSYMs/ \;
           zip -r "./$OUTPUT_PATH/Telegram.DSYMs.zip" build/DSYMs 1>/dev/null
 
       - name: Create Release and upload assets
