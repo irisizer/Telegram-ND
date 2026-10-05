@@ -89,7 +89,7 @@ private enum NewFeaturesEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: arguments.colorTitle, sectionId: self.section)
         case let .colorOption(_, hex, selected):
             let label = selected ? "✓" : ""
-            return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: arguments.colorName(hex: hex), label: label, labelStyle: .text, sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
+            return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: arguments.colorName(hex), label: label, labelStyle: .text, sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
                 arguments.selectColor(hex)
             })
         case let .colorsFooter(text):

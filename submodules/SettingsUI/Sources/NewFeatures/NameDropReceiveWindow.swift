@@ -245,14 +245,16 @@ public final class NameDropOverlay {
     }
 
     private func localizedIgnore() -> String {
-        if let s = Bundle.main.localizedString(forKey: "NewFeatures.Receive.Ignore", value: nil, table: nil), s != "NewFeatures.Receive.Ignore" {
+        let s = Bundle.main.localizedString(forKey: "NewFeatures.Receive.Ignore", value: nil, table: nil)
+        if s != "NewFeatures.Receive.Ignore" {
             return s
         }
         return "Ignore"
     }
 
     private func localizedAddChat() -> String {
-        if let s = Bundle.main.localizedString(forKey: "NewFeatures.Receive.AddChat", value: nil, table: nil), s != "NewFeatures.Receive.AddChat" {
+        let s = Bundle.main.localizedString(forKey: "NewFeatures.Receive.AddChat", value: nil, table: nil)
+        if s != "NewFeatures.Receive.AddChat" {
             return s
         }
         return "Add Chat"
