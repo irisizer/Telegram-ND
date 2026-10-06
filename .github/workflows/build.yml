@@ -38,6 +38,32 @@ jobs:
           cp -R $GITHUB_WORKSPACE /Users/Shared/
           mv /Users/Shared/$(basename $GITHUB_WORKSPACE) /Users/Shared/telegram-ios
 
+      - name: Inject API credentials from secrets
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+        run: |
+          # Personal api_id/api_hash are kept in GitHub Secrets (never in git).
+          # If set, they replace the stock public test credentials in the
+          # build configuration before Make.py bakes them into the binary.
+          # Without secrets the stock open-source credentials are used as-is.
+          if [ -n "$TG_API_ID" ] && [ -n "$TG_API_HASH" ]; then
+            python3 - "$TG_API_ID" "$TG_API_HASH" <<'EOF'
+          import json, sys
+          path = "/Users/Shared/telegram-ios/build-system/appstore-configuration.json"
+          with open(path, encoding="utf-8") as f:
+              cfg = json.load(f)
+          cfg["api_id"] = sys.argv[1]
+          cfg["api_hash"] = sys.argv[2]
+          with open(path, "w", encoding="utf-8") as f:
+              json.dump(cfg, f, indent="\t")
+              f.write("\n")
+          print("api credentials injected from secrets")
+          EOF
+          else
+            echo "TG_API_ID/TG_API_HASH secrets not set, using stock credentials"
+          fi
+
       - name: Build the App
         run: |
           set -x
